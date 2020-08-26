@@ -184,8 +184,10 @@ function describePlant(plant) {
  * // Example: "The Rose Garden has 10 types of plants in it.  It contains: A"
  */
 function describeGarden(gardenName, listOfPlants) {
-  let description;
-
+  let description = `The ${gardenName} has ${listOfPlants.length} types of plants in it. It contains: `;
+  for (let plant of listOfPlants) {
+    description += describePlant(plant);
+  }
   // Your Code Here!
 
   // Given a list of plants, describe every plant in the list.
@@ -203,7 +205,11 @@ function describeGarden(gardenName, listOfPlants) {
  * This should describe every garden and every plant.
  */
 function describeEstate(estate) {
-  let description = `${describeGarden(estate)}`;
+  let description = "The estate has 3 gardens they are: ";
+  for (let gardenName in estate) {
+    let listOfPlants = estate[gardenName];
+    description += describeGarden(gardenName, listOfPlants);
+  }
   // Your Code Here!
   // Return a string describing all the different visual features of all the gardens in the estate.
   // Feel free to make up various details.
@@ -233,20 +239,14 @@ function describeEstate(estate) {
 function calculateWaterUsagePerWeek(estate) {
   let numGallons = 0;
   // Your Code Here!
-  for (let i = 0; i < estate.roseArbor.length; i++) {
-    let plant = estate.roseArbor[i];
-    numGallons += plant.gallonsWaterPerWeek;
-  }
-  for (let i = 0; i < estate.perennialGarden.length; i++) {
-    let plant = estate.perennialGarden[i];
-    numGallons += plant.gallonsWaterPerWeek;
-  }
-  for (let i = 0; i < estate.slopePlanters.length; i++) {
-    let plant = estate.slopePlanters[i];
-    numGallons += plant.gallonsWaterPerWeek;
-  }
+  for (let gardenName in estate) {
+    let listOfPlants = estate[gardenName];
 
-  return numGallons;
+    for (let plant of listOfPlants) {
+      numGallons += plant.gallonsWaterPerWeek;
+    }
+  }
+  return Math.floor(numGallons);
 }
 
 /* ---------------------------------------------------------------------------
@@ -279,12 +279,11 @@ function calculateWaterUsagePerWeek(estate) {
  *
  */
 function cloneRose(plant) {
-  let clone = {};
+  let clone = { ...plant };
   // Your Code Here!
   // Given a plant, clone it and return the new plant
   // Hint: You do this in the Reading!  copyObject...
-
-  changeColorOfPlant(clone);
+  // used spread opetator
   return clone;
 }
 
@@ -341,6 +340,14 @@ function changeColorOfPlant(plant) {
  */
 function cloneAllTheRosesAndChangeTheirColors(estate) {
   // Your Code Here!
+  let clonedRoses = [];
+  for (let rose of estate.roseArbor) {
+    let clonedRose = cloneRose(rose);
+    clonedRoses.push(clonedRose);
+  }
+  for (let clonedRose of clonedRoses) {
+    estate.roseArbor.push(clonedRose);
+  }
   // for each rose...
   // Hint: Watch out for modifying an array you are currently looping through!  How can you avoid that?
   // Instead of putting the new plants immediately into the rose arbor, maybe store them in a new array
